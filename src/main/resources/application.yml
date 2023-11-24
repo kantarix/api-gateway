@@ -1,0 +1,6 @@
+server:
+  port: 5000
+
+logging:
+  level:
+    com.kantarix.api_gateway: DEBUG
