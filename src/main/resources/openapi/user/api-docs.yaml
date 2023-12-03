@@ -1,0 +1,160 @@
+openapi: 3.0.1
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+- url: http://localhost:5001
+  description: Generated server url
+paths:
+  /api/signout:
+    post:
+      tags:
+      - User
+      operationId: signout
+      parameters:
+      - name: X-Access-Token
+        in: header
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+  /api/register:
+    post:
+      tags:
+      - User
+      operationId: register
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/TokenPair'
+  /api/refresh:
+    post:
+      tags:
+      - User
+      operationId: refresh
+      parameters:
+      - name: X-Access-Token
+        in: header
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshTokenRequest'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/TokenPair'
+  /api/auth:
+    post:
+      tags:
+      - User
+      operationId: auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthRequest'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/TokenPair'
+  /api/account:
+    delete:
+      tags:
+      - User
+      operationId: deleteAccount
+      parameters:
+      - name: X-Access-Token
+        in: header
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasswordRequest'
+        required: true
+      responses:
+        "200":
+          description: OK
+components:
+  schemas:
+    RegisterRequest:
+      required:
+      - confirmPassword
+      - name
+      - password
+      - username
+      type: object
+      properties:
+        name:
+          type: string
+        username:
+          type: string
+        password:
+          type: string
+        confirmPassword:
+          type: string
+    TokenPair:
+      required:
+      - accessToken
+      - refreshToken
+      - ttlMs
+      type: object
+      properties:
+        accessToken:
+          type: string
+        refreshToken:
+          type: string
+          format: uuid
+        ttlMs:
+          type: integer
+          format: int64
+    RefreshTokenRequest:
+      required:
+      - refreshToken
+      type: object
+      properties:
+        refreshToken:
+          type: string
+          format: uuid
+    AuthRequest:
+      required:
+      - password
+      - username
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+    PasswordRequest:
+      required:
+      - password
+      type: object
+      properties:
+        password:
+          type: string

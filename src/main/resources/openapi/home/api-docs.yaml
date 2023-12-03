@@ -1,0 +1,284 @@
+openapi: 3.0.1
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+- url: http://localhost:5002
+  description: Generated server url
+paths:
+  /api/rooms/{roomId}:
+    put:
+      tags:
+      - Room
+      operationId: editRoom
+      parameters:
+      - name: roomId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoomRequest'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Room'
+    delete:
+      tags:
+      - Room
+      operationId: deleteRoom
+      parameters:
+      - name: roomId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+  /api/homes/{homeId}:
+    get:
+      tags:
+      - Home
+      operationId: getHome
+      parameters:
+      - name: homeId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Home'
+    put:
+      tags:
+      - Home
+      operationId: editHome
+      parameters:
+      - name: homeId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HomeRequest'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Home'
+    delete:
+      tags:
+      - Home
+      operationId: deleteHome
+      parameters:
+      - name: homeId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+  /api/rooms:
+    post:
+      tags:
+      - Room
+      operationId: createRoom
+      parameters:
+      - name: homeId
+        in: query
+        required: true
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoomRequest'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Room'
+  /api/homes:
+    get:
+      tags:
+      - Home
+      operationId: getHomes
+      parameters:
+      - name: ownerId
+        in: query
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HomeSimple'
+    post:
+      tags:
+      - Home
+      operationId: createHome
+      parameters:
+      - name: ownerId
+        in: query
+        required: true
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HomeRequest'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Home'
+  /api/rooms/ownership/{roomId}:
+    get:
+      tags:
+      - Room
+      operationId: checkOwnership
+      parameters:
+      - name: roomId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: ownerId
+        in: query
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: boolean
+  /api/homes/ownership/{homeId}:
+    get:
+      tags:
+      - Home
+      operationId: checkOwnership_1
+      parameters:
+      - name: homeId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: ownerId
+        in: query
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: boolean
+components:
+  schemas:
+    RoomRequest:
+      required:
+      - name
+      type: object
+      properties:
+        name:
+          type: string
+    Room:
+      required:
+      - id
+      - name
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+    HomeRequest:
+      required:
+      - address
+      - name
+      type: object
+      properties:
+        name:
+          type: string
+        address:
+          pattern: "[A-Z]{1}[a-z]+ \\d{1,4}"
+          type: string
+    Home:
+      required:
+      - id
+      - name
+      - rooms
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+        address:
+          type: string
+        rooms:
+          type: array
+          items:
+            $ref: '#/components/schemas/Room'
+    HomeSimple:
+      required:
+      - id
+      - name
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string

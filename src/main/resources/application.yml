@@ -4,3 +4,6 @@ server:
 logging:
   level:
     com.kantarix.api_gateway: DEBUG
+
+jwt:
+  secret: ${secret}
