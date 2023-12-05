@@ -37,10 +37,10 @@ class DeviceController(
     @PostMapping
     fun createDevice(
         @Validated @RequestBody deviceRequest: CreateDeviceRequestGen,
-    ) = deviceRequest.roomId
+    ) = (deviceRequest.roomId
         ?.let { checker.checkRoomOwnership(it) }
-        ?: checker.checkHomeOwnership(deviceRequest.homeId)
-        ?.let { deviceClient.createDevice(RequestContext.getUserId(), deviceRequest) }
+        ?: checker.checkHomeOwnership(deviceRequest.homeId))
+            ?.let { deviceClient.createDevice(RequestContext.getUserId(), deviceRequest) }
 
     @PutMapping("/{deviceId}")
     fun editDevice(

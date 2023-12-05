@@ -41,6 +41,8 @@ class AuthenticationFilter(
                     }
                 }
                 ?: throw RuntimeException("Missing authorization header.")
+        } else {
+            filterChain.doFilter(request, response)
         }
     }
 }
